@@ -1,5 +1,4 @@
 const User = require("../models/User.js");
-const File = require("../models/File.js");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -10,24 +9,20 @@ const login = async (req, res) => {
       const user = await User.findOne({ username });
       if (user) {
          if (user.password === password) {
-            const { password, ...otherInfo } = user._doc;
-            const token = jwt.sign({ ...otherInfo }, process.env.JWT_SECRET, {
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
                expiresIn: "30d",
             });
             res.json({
-               status: 200,
-               message: "Login Success",
+               message: "Đăng nhập thành công",
                data: token,
             });
          } else {
-            res.json({
-               status: 400,
+            res.status(400).json({
                message: "Mật khẩu không đúng",
             });
          }
       } else {
-         res.json({
-            status: 400,
+         res.status(400).json({
             message: "Tài khoản không tồn tại",
          });
       }
@@ -42,8 +37,7 @@ const register = async (req, res) => {
       const findWithUser = await User.findOne({ username });
       const findWithEmail = await User.findOne({ email });
       if (findWithUser || findWithEmail) {
-         res.json({
-            status: 400,
+         res.status(400).json({
             message: "Tài khoản hoặc Email đã tồn tại",
          });
       } else {
@@ -72,7 +66,7 @@ const register = async (req, res) => {
                if (user && user._id) {
                   await user.delete();
                }
-            } catch (error) {}
+            } catch (error) { }
             res.json({
                status: 500,
                message: "Lỗi hệ thống",
@@ -87,22 +81,27 @@ const register = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
    try {
-      const token = req.headers.authorization.split(" ")[1];
+      const token = req.headers?.authorization && req.headers.authorization.split(" ")[1];
       try {
          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+         const user = await User.findById(decoded._id);
          res.json({
-            status: 200,
-            message: "Đăng nhập thành công",
-            data: decoded,
+            message: "Lấy thông tin cá nhân thành công",
+            data: user,
          });
       } catch (error) {
-         res.json({
-            status: 401,
+         console.log(error);
+
+         res.status(401).json({
             message: "Token hết hạn",
             error: error,
          });
       }
+
    } catch (error) {
+      console.log(error);
+
       res.json({
          status: 500,
          message: "Hệ thống lỗi",
@@ -116,24 +115,22 @@ const authenticate = (req, res, next) => {
       if (req.headers.authorization) {
          token = req.headers.authorization.split(" ")[1];
       } else {
-         res.json({ status: 401, message: "Không thể xác minh người dùng" });
+         res.status(401).json({ message: "Không thể xác minh người dùng" });
       }
       try {
          const decoded = jwt.verify(token, process.env.JWT_SECRET);
          req.user = decoded;
          next();
       } catch (error) {
-         res.json({
-            status: 401,
+         res.status(401).json({
             message: "Token hết hạn",
             error: error,
          });
       }
    } catch (error) {
       console.log("authenticate", error);
-      res.json({
-         status: 500,
-         message: "Hệ thống lỗi",
+      res.status(500).json({
+         message: "Hệ thống lỗi authen",
       });
    }
 };
