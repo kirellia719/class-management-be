@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const socket = require("socket.io");
 
 const socketServer = require("./sockets/socketHandler.js");
-const router = require("./routes/index.js");
+const router = require("./router.js");
 
 const app = express();
 

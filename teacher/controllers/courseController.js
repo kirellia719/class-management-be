@@ -1,5 +1,4 @@
-const User = require("../models/User.js");
-const Course = require("../models/Course.js");
+const Course = require("../../models/Course.js");
 const dotenv = require("dotenv");
 dotenv.config();
 

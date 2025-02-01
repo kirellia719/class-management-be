@@ -1,4 +1,5 @@
 const User = require("../models/User.js");
+const Student = require("../models/Student.js");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -6,7 +7,10 @@ dotenv.config();
 const login = async (req, res) => {
    try {
       const { username, password } = req.body;
-      const user = await User.findOne({ username });
+      let user = await User.findOne({ username });
+      if (!user) {
+         user = await Student.findOne({ username });
+      }
       if (user) {
          if (user.password === password) {
             const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
@@ -85,14 +89,21 @@ const getCurrentUser = async (req, res) => {
       try {
          const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-         const user = await User.findById(decoded._id);
-         res.json({
-            message: "Lấy thông tin cá nhân thành công",
-            data: user,
-         });
+         let user = await User.findById(decoded._id);
+         if (!user) {
+            user = await Student.findById(decoded._id);
+         }
+         if (user) {
+            res.json({
+               message: "Lấy thông tin cá nhân thành công",
+               data: user,
+            });
+         } else {
+            //Không tồn tại
+            res.status(404).json({ message: "Không tìm thấy người dùng" });
+         }
       } catch (error) {
          console.log(error);
-
          res.status(401).json({
             message: "Token hết hạn",
             error: error,

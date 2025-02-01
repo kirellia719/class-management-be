@@ -1,5 +1,5 @@
-const Course = require("../models/Course.js");
-const Student = require("../models/Student.js");
+const Course = require("../../models/Course.js");
+const Student = require("../../models/Student.js");
 const dotenv = require("dotenv");
 dotenv.config();
 function generateUsername(fullName, birthDay) {
@@ -37,7 +37,7 @@ const getStudents = async (req, res) => {
          "_id fullname birthday male avatar username career"
       ); // Lấy thông tin chi tiết học viên
       if (!course) return res.status(404).json({ message: "Khóa học không tồn tại" });
-      else return res.json({ message: "Lấy danh sách học sinh", data: course.students });
+      else return res.json({ message: "Lấy thông tin khoá học", data: course });
    } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Lỗi server", error });
