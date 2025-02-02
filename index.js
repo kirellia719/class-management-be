@@ -7,6 +7,7 @@ const socket = require("socket.io");
 
 const socketServer = require("./sockets/socketHandler.js");
 const router = require("./router.js");
+const cronJob = require("./cronJob.js");
 
 const app = express();
 
@@ -28,6 +29,8 @@ mongoose
       const server = app.listen(PORT, () => {
          console.log(`Running: http://localhost:${PORT}`);
       });
+
+      cronJob();
 
       const io = socket(server, {
          cors: {

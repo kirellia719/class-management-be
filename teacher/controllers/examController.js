@@ -5,7 +5,7 @@ dotenv.config();
 const createExam = async (req, res) => {
     try {
         const teacherId = req.user._id;
-        const { title, duration, courses, questions } = req.body;
+        const { title } = req.body;
 
         const existingExam = await Exam.findOne({ title });
 
@@ -15,11 +15,8 @@ const createExam = async (req, res) => {
 
         // Tạo đề thi mới
         const newExam = new Exam({
-            title,
-            duration,
-            courses,
+            ...req.body,
             teacherId,
-            questions
         });
 
         await newExam.save();
@@ -30,7 +27,6 @@ const createExam = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-
         res.status(500).json({ message: "Lỗi server", error });
     }
 };
