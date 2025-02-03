@@ -6,5 +6,8 @@ const router = express.Router();
 
 router.post("/", authenticate, examController.createExam);
 router.get("/all", authenticate, examController.getExams);
+router.get("/:examId", authenticate, examController.getExam);
+router.delete("/:examId", authenticate, examController.deleteExam);
+router.put("/:examId", authenticate, examController.updateExam);
 
 module.exports = router;

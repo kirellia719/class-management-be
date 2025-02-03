@@ -9,9 +9,9 @@ const UserSchema = new mongoose.Schema(
       career: { type: Number, required: true, default: 2 },
       birthday: { type: Date, required: true, default: new Date() },
       male: { type: Boolean, required: true, default: false },
-      phone: { type: String }
+      phone: { type: String },
    },
    { timestamps: true }
 );
 
-module.exports = mongoose.model("users", UserSchema);
+module.exports = mongoose.model("User", UserSchema);

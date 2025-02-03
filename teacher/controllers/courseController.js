@@ -4,7 +4,7 @@ dotenv.config();
 
 const getCourses = async (req, res) => {
    try {
-      const courses = await Course.find({ teacherId: req.user });
+      const courses = await Course.find({ teacherId: req.user._id });
       res.json({
          message: "Lấy danh sách khoá học thành công",
          data: courses,
@@ -38,9 +38,8 @@ const updateCourse = async (req, res) => {
    try {
       const { courseId } = req.params;
       const { name } = req.body;
-      const checkedCourse = await Course.findOne({ name });
+      const checkedCourse = await Course.findOne({ name, _id: { $ne: courseId } });
       if (checkedCourse) {
-         console.log(checkedCourse);
          return res.status(400).json({ message: "Bị trùng tên" });
       } else {
          let course = await Course.findByIdAndUpdate(courseId, { name });
@@ -55,7 +54,6 @@ const updateCourse = async (req, res) => {
       }
    } catch (error) {
       console.log(error);
-
       res.status(500).json(error);
    }
 };
