@@ -2,6 +2,14 @@ const Exam = require("../../models/Exam.js");
 const Course = require("../../models/Course.js");
 const Submission = require("../../models/Submission.js");
 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // Chọn ngẫu nhiên một vị trí từ 0 đến i
+        [array[i], array[j]] = [array[j], array[i]];  // Hoán đổi phần tử
+    }
+    return array;
+}
+
 const checkExam = async (req, res) => {
     const studentId = req.user._id;
     const { examId } = req.params;
@@ -101,6 +109,10 @@ const getExamForSubmission = async (req, res) => {
             options: question.options,
             _id: question._id
         }));
+
+        if (exam.shuffleQuestions) {
+            questions = shuffleArray(questions);
+        }
 
         exam.questions = questions;
         submission.exam = exam;
