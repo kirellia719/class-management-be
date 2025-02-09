@@ -1,13 +1,19 @@
 const Student = require("../models/Student.js");
+const User = require("../models/User.js");
 
 const changeAvatar = async (req, res) => {
     try {
         const userId = req.user._id;
+        const career = req.user.career;
+        console.log(career);
+
         const { avatar } = req.body;
-        console.log(avatar);
-
-
-        const user = await Student.findByIdAndUpdate(userId, { avatar }, { new: true });
+        let user;
+        if (career == 2) {
+            user = await Student.findByIdAndUpdate(userId, { avatar }, { new: true });
+        } else if (career == 1) {
+            user = await User.findByIdAndUpdate(userId, { avatar }, { new: true });
+        }
 
         if (!user) {
             return res.status(404).json({ message: "Tài khoản không tồn tại" });
