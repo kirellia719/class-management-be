@@ -24,7 +24,6 @@ const checkExam = async (req, res) => {
         numberQuestions = exam.questions.length;
         delete exam.questions;
         exam.numberQuestions = numberQuestions;
-        console.log(exam);
 
 
         // 3. Kiểm tra xem học sinh có thuộc lớp nào của bài thi không

@@ -38,5 +38,5 @@ const checkAndUpdateExamStatus = async () => {
 
 // Kiểm tra mỗi phút (60000 ms)
 module.exports = () => {
-    setInterval(checkAndUpdateExamStatus, 10000);
+    setInterval(checkAndUpdateExamStatus, 60000);
 }
