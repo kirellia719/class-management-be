@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const socket = require("socket.io");
+const path = require("path");
 
 const socketServer = require("./sockets/socketHandler.js");
 const router = require("./router.js");
@@ -16,7 +17,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("short"));
-app.use('/public', express.static('static/public'))
+app.use("/public", express.static(path.join(__dirname, "../public")));
 
 
 // ROUTES
