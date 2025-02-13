@@ -16,7 +16,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("short"));
-app.use('/public', express.static('public'))
+app.use('/public', express.static('static/public'))
 
 
 // ROUTES
